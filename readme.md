@@ -12,7 +12,7 @@ For explanation, please visit this article - [Spring Boot SSL (HTTPS) examples](
 
 ## How to run this?
 ```bash
-$ git clone https://github.com/mkyong/spring-boot
+$ git clone https://github.com/itistech/spring-boot-ssl
 
 $ cd spring-boot-ssl
 
