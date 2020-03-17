@@ -1,0 +1,25 @@
+FROM elgalu/selenium
+
+USER root
+RUN sudo rm -rf /etc/apt/sources.list.d/google-chrome.list
+
+ENV CHROME_ARGS='--no-sandbox --disable-setuid-sandbox --disable-cpu --disable-infobars --ignore-certificate-errors'
+
+ADD certificate.crt /usr/local/share/ca-certificates/certificate.crt
+RUN sudo update-ca-certificates
+
+RUN apt -qqy update \
+    && apt -qqy --no-install-recommends install \
+    libnss3-tools \
+    libnss3-1d
+
+USER seluser
+
+# CHROME
+RUN mkdir -p /home/seluser/.pki/nssdb \
+    && certutil -d /home/seluser/.pki/nssdb -N \
+    && certutil -d sql:/home/seluser/.pki/nssdb -L \
+    && certutil -d sql:/home/seluser/.pki/nssdb -A -t "CT,C,C" -n CertCA -i /usr/local/share/ca-certificates/certificate.crt \
+    && certutil -d sql:/home/seluser/.pki/nssdb -L
+
+#  docker build -f Dockerfile .
